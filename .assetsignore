@@ -1,0 +1,9 @@
+worker.ts
+main.ts
+deno.json
+deno.lock
+wrangler.json
+wrangler.jsonc
+providers/
+.github/
+*.md
