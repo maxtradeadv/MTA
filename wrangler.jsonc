@@ -1,0 +1,1 @@
+{\n  "$schema":"./node_modules/wrangler/config-schema.json",\n  "name":"mta",\n  "main":"./worker.ts",\n  "compatibility_date":"2026-09-20",\n  "assets":{"directory":"./","binding":"ASSETS","run_worker_first":true},\n  "keep_vars":true\n}\n
