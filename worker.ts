@@ -94,7 +94,7 @@ async function authGuard(req:Request){
   if(await validSession(req))return null;
   return loginPage();
 }
-export default {async fetch(req:Request,env:Env){runtimeEnv=env;const u=new URL(req.url);try{
+export default {async fetch(req:Request,env:Env){runtimeEnv=env;(globalThis as any).__MTA_IA_KEY=env.INDEX_ALPHA_API_KEY||'';const u=new URL(req.url);try{
   if(req.method==='OPTIONS')return json({ok:true});
   if(u.pathname==='/auth/login'&&req.method==='POST'){
     const code=(await req.formData()).get('code');
