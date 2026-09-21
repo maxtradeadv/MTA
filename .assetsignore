@@ -1,1 +1,9 @@
-worker.ts\nmain.ts\nwrangler.json\nwrangler.jsonc\ndeno.json\ndeno.lock\n.git\n.github\nproviders/\n*.md\n
+worker.ts
+main.ts
+deno.json
+deno.lock
+wrangler.json
+wrangler.jsonc
+providers/
+.github/
+*.md
