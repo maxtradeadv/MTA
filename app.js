@@ -302,7 +302,7 @@ function render(){
 }
 const BACKTEST_DAYS=364;
 async function fetchStockChunked(t,from,to,p){
-  const maxDays=15,prices=[],broker=[],timestamps=[];
+  const maxDays=5,prices=[],broker=[],timestamps=[];
   let cur=new Date(from),end=new Date(to);
   while(cur<=end){
     const chunkEnd=new Date(Math.min(end.getTime(),cur.getTime()+(maxDays-1)*86400000));
