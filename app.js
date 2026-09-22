@@ -301,11 +301,24 @@ function render(){
   },0);
 }
 const BACKTEST_DAYS=364;
+async function fetchStockChunked(t,from,to,p){
+  const maxDays=38,prices=[],broker=[],timestamps=[];
+  let cur=new Date(from),end=new Date(to);
+  while(cur<=end){
+    const chunkEnd=new Date(Math.min(end.getTime(),cur.getTime()+(maxDays-1)*86400000));
+    const url=BACKEND_URL+'/stock?ticker='+encodeURIComponent(t)+'&from='+ymd(cur)+'&to='+ymd(chunkEnd)+'&provider='+encodeURIComponent(p);
+    const res=await fetch(url,{cache:'no-store'}),j=await res.json();
+    if(!res.ok||!j.ok)throw Error(j.error||('HTTP '+res.status));
+    prices.push(...(j.prices||[]));
+    broker.push(...(j.broker||[]));
+    if(j.sourceTimestamp)timestamps.push(j.sourceTimestamp);
+    cur=new Date(chunkEnd.getTime()+86400000);
+  }
+  return {prices,broker,sourceTimestamp:timestamps.sort().at(-1)||'',provider:p};
+}
 async function loadBacktestSeries(t){
   const p=provider(),to=new Date(),from=new Date(to.getTime()-BACKTEST_DAYS*86400000);
-  const url=BACKEND_URL+'/stock?ticker='+encodeURIComponent(t)+'&from='+ymd(from)+'&to='+ymd(to)+'&provider='+encodeURIComponent(p);
-  const res=await fetch(url,{cache:'no-store'}),j=await res.json();
-  if(!res.ok||!j.ok)throw Error(j.error||('HTTP '+res.status));
+  const j=await fetchStockChunked(t,from,to,p);
   const prices=StockFlowProvider.normalize(j.prices||[]),br=j.broker||[];
   if(!prices.length)throw Error('OHLCV kosong');
   const fresh=StockFlowProvider.group(StockFlowProvider.mergeBrokerRows(prices,br)).find(x=>x.ticker===t);
