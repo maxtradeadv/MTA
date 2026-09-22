@@ -306,7 +306,7 @@ async function fetchStockChunked(t,from,to,p){
   let cur=new Date(from),end=new Date(to);
   while(cur<=end){
     const chunkEnd=new Date(Math.min(end.getTime(),cur.getTime()+(maxDays-1)*86400000));
-    const url=BACKEND_URL+'/stock?ticker='+encodeURIComponent(t)+'&from='+ymd(cur)+'&to='+ymd(chunkEnd)+'&provider='+encodeURIComponent(p);
+    const url=BACKEND_URL+'/stock?ticker='+encodeURIComponent(t)+'&from='+ymd(cur)+'&to='+ymd(chunkEnd)+'&provider='+encodeURIComponent(p)+'&includeSourceTimestamp=0';
     const res=await fetch(url,{cache:'no-store'}),j=await res.json();
     if(!res.ok||!j.ok)throw Error(j.error||('HTTP '+res.status));
     prices.push(...(j.prices||[]));
